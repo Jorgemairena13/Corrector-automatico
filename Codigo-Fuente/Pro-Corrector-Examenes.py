@@ -9,12 +9,10 @@ from rich.table import Table
 from rich.columns import Columns
 from rich.progress import Progress, BarColumn, TextColumn, SpinnerColumn
 from rich.live import Live
+
 import time
 
-
 console = Console()
-
-
 
 menu_contenido = """
 
@@ -34,31 +32,65 @@ Elige una opcion:
 [/bold red]    
                             
 """
-system("cls")
+
 menu_principal = Panel(
     Align.center(menu_contenido),
     border_style="#b2ff33",
-    title="[blink][#fff933]Corrector examenes[/]"
+    title="[blink][#fff933]Corrector examenes[/]",
+    expand= True
+    
 )
 
 
+                                                
+                                                
 
-console.print(menu_principal)
+def main():
+    clase = dict()
+    # Borramos la pantalla
+    system("cls")
+    # Mostramos el menu principal
+    console.print(menu_principal)
+    
 
-def pre_opcion():
-    try:
-        opcion = int(input())
-    except:
-        console.print(Panel("[red]❌Introduce un numero por favor[/]",
+    while True:
+        system("cls")
+        console.print(menu_principal)
+        try:
+            opcion = int(input())
+        except:
+            console.print(Panel("[red]❌Introduce un numero por favor[/]",
+                                                        title="Error",
+                                                        border_style="red",
+                                                        width=30))
+        # Opcion para añadir clase
+        if opcion == 1:
+            nombre_clase = prompt("Cual es el nombre de la clase")
+            clase[nombre_clase] = nombre_clase
+            num_alumnos = int(prompt("Nº de alumnos en clase"))
+            for _ in range(num_alumnos):
+                
+        # Opcion para corrergir examen
+        elif opcion == 2:
+            pass
+        # Opcion para ver los ultimos examenes corregidos
+        elif opcion == 3:
+            pass
+        elif opcion == 4:
+            input("Muchas gracias por usar el programa")
+            break
+        else:
+            console.print(Panel("[red]❌Introduce un opcion valida por favor[/]",
                                                     title="Error",
                                                     border_style="red",
-                                                    width=30))
-    return opcion
-                                                
-                                                
+                                                    width=50,
+                                                    
+                                                    ))
 
-opcion = pre_opcion()
+            input()
+  
+    
 
 
-
-
+if __name__ == "__main__":
+    main()
