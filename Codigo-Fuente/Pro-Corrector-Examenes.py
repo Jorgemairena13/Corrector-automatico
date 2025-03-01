@@ -1,4 +1,4 @@
-from rich import print  as rprint
+from rich import print  as print
 from rich.console import Console
 from rich.panel import Panel
 from rich.align import Align
@@ -113,24 +113,39 @@ def main():
 
             # Mostramos las clases para corregir el examen   
             console.print(clase)
-            contador = 0
-            pregutas_buenas = 0
-            pregutas_malas = 0
+            
+            preguntas_buenas = 0
+            preguntas_malas = 0
             sin_contestar = 0
             nombre_clase = input('Nombre clase: ')
+            
+            for alumno in clase[nombre_clase]['alumnos']:
+                contador = 0
+                console.print(f'Examen a corregir de {alumno}')
+                for _ in lis_pregu_corre :
+                    respuesta = prompt(f'Escribe la respuesta a la pregunta {contador + 1}').upper()
+                    
+                    if respuesta == '':
+                        sin_contestar += 1
+                        
+                    elif respuesta == lis_pregu_corre[contador]:
+                        preguntas_buenas += 1
+                        
+                    else:
+                        preguntas_malas += 1
+                        
+                    
+                    final_pregu_buenas = preguntas_buenas * pregunta_correcta
+                    final_pregu_malas = preguntas_malas * pregunta_incorrecta
+                    nota_final = final_pregu_buenas - final_pregu_malas
+                    nota_final = round(nota_final,2)
+                    print(nota_final)
+                    contador += 1
+                    input()
+                alumno["nota"] = nota_final
+                print(clase[nombre_clase]["alumnos"])
 
-            for pregunta in lis_pregu_corre :
-                respuesta = prompt(f'Pregunta {contador} {alumno["Nombre"]}: ').upper()
-                if respuesta == ' ':
-                    sin_contestar += 1
-                    print(sin_contestar)
-                elif respuesta == lis_pregu_corre[contador]:
-                    pregutas_buenas += 1
-                    print(pregutas_buenas)
-                else:
-                    pregunta_incorrecta += 1
-                    pregunta_incorrecta
-                input()
+                    
                 
 
             # Bucle para añadir la nota del alumno
