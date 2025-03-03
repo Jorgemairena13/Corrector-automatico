@@ -44,17 +44,10 @@ style = Style.from_dict({
     'prompt': '#ffd02f',  
     '': '#33b5ff',
 })
-
-
-                                                
-                                                
-
+                                       
 def main():
     clase = dict()
     opcion = 0
-    # Borramos la pantalla
-    
-    
     # Bucle principal
     while True:
         system("cls") # Borramos la pantalla
@@ -64,7 +57,7 @@ def main():
         try: # Le pedimos la opcion
             opcion = int(prompt('',style=style))
         except: # Si no introduce un numero le mostramos mensaje de error
-            console.print(Panel("[red]❌Introduce una opcion valida por favor[/]",
+            console.input(Panel("[red]❌ Introduce una opcion valida por favor[/]",
                                                         title="Error",
                                                         border_style="red",
                                                         width=40))
@@ -75,13 +68,34 @@ def main():
 
             #Preguntamos por el nombre de la clase
             nombre_clase = prompt("Cual es el nombre de la clase: ",style=style)
+            # Comprobamos que la clase no esta ya guardada
+            if nombre_clase in clase:
+                console.input(Panel("[red]❌ La clase ya esta añadida[/]",
+                                                        title="Error",
+                                                        border_style="red",
+                                                        width=40))
+                continue
+            elif nombre_clase == '':
+                console.input(Panel("[red]❌ No se se admiten espacios vacios[/]",
+                                                        title="Error",
+                                                        border_style="red",
+                                                        width=40))
+                continue
+
             # En el diccionario creado anteriormente guardamos el nombre de la clase con una clave alumnos y una lista donde estaran los alumnos
             clase[nombre_clase] = {"alumnos": []}
             
             # Pedimos el numero de alumnos
-            num_alumnos = int(prompt("Nº de alumnos en clase: ",style=style))
+            try:
+                num_alumnos = int(prompt("Nº de alumnos en clase: ",style=style))
+            except:
+                console.input(Panel("[red]❌Introduce un numero por favor[/]",
+                                                        title="Error",
+                                                        border_style="red",
+                                                        width=40))
+                del(clase[nombre_clase])
+                continue
 
-            
             for _ in range(num_alumnos):
                 # Preguntamos el nombre de los alumnos que haya en la clase
                 nombre_alumno = prompt('Nombre del alumno a añadir: ',style=style).capitalize()
@@ -101,6 +115,7 @@ def main():
                                                     ))
             prompt()
                
+               
         # Opcion para corrergir examen
         elif opcion == 2:
 
@@ -111,9 +126,18 @@ def main():
             while True:
                 try: # Preguntamos por el numero de preguntas
                     num_preguntas = int(prompt('Cuantas preguntas tiene el examen?\n',style=style))
+                    if num_preguntas == 0:
+                        console.input(Panel("[red]❌ El examen no puede tener 0 preguntas[/]",
+                                                            title="Error",
+                                                            border_style="red",
+                                                            width=40))
+                        system('cls')
+                        continue
+
+                    
                     break
                 except: # Si nos da error le mostramos ese mensaje y le volvemos a preguntar
-                    console.print(Panel("[red]❌Introduce un numero por favor[/]",
+                    console.input(Panel("[red]❌Introduce un numero por favor[/]",
                                                             title="Error",
                                                             border_style="red",
                                                             width=40))
@@ -132,11 +156,22 @@ def main():
             # Hacemos el bucle para preguntar por las correctas
             for _ in range(num_preguntas):
                 system('cls')
-                # Pedimos la respuesta correcta
-                pregunta_corregida = prompt(f'Escribe la solucion de la pregunta {contador} [A/B/C/D]',style=style).upper()
 
-                # Añadimos a la lista de preguntaas corregidas
-                lis_pregu_corre.append(pregunta_corregida)
+                while True:
+                    # Pedimos la respuesta correcta
+                    pregunta_corregida = prompt(f'Escribe la solucion de la pregunta {contador} [A/B/C/D]',style=style).upper()
+                    if pregunta_corregida in lista_opciones:
+                        # Añadimos a la lista de preguntaas corregidas
+                        lis_pregu_corre.append(pregunta_corregida)
+                        break
+                    else:
+                        console.input(Panel("[red]❌La opcion solo puede ser [A/B/C/D] [/]",
+                                                            title="Error",
+                                                            border_style="red",
+                                                            width=40))
+                        system('cls')
+                        continue
+
                 contador += 1 # Aumentamos en 1
 
             # Mostramos las clases para corregir el examen   
@@ -144,7 +179,16 @@ def main():
                 console.print(f'[#0316ff]{a}-{nombre}[/]')
 
             # Pedimos el nombre de la clase que se va a corregir el examen
-            nombre_clase = prompt('Nombre clase: ',style=style)
+            while True:
+                try:
+                    nombre_clase = prompt('Nombre clase: ',style=style)
+                    break
+                except:
+                    console.print(Panel("[red]❌La clase no existe[/]",
+                                                                title="Error",
+                                                                border_style="red",
+                                                                width=40))
+                    continue
             
             # Recorremos los nombres de los alumnos
             for alumno in clase[nombre_clase]['alumnos']:
@@ -161,17 +205,23 @@ def main():
 
                 # Recorremos la lista de preguntas correctas
                 for _ in lis_pregu_corre :
-                    
-                    # Le pedimos la respuesta del alumno
-                    respuesta = prompt(f'Escribe la respuesta a la pregunta {contador + 1}\nIntro para respuesta sin contestar',style=style).upper()
-                    print('')
-                    if respuesta in lista_opciones:
-                        pass
-                    else:
-                        console.print(Panel("[red]❌Introduce una opcion valida por favor [A B C D][/]",
-                                                        title="Error",
-                                                        border_style="red",
-                                                        width=60))
+                    # Bucle para validar la respuesta 
+                    while True:
+                        # Le pedimos la respuesta del alumno
+                        respuesta = prompt(f'Escribe la respuesta a la pregunta {contador + 1}\nIntro para respuesta sin contestar',style=style).upper()
+                        # Espacio para mejor vision
+                        print('')
+
+                        # Si esta en la lista de opciones o es intro
+                        if respuesta in lista_opciones or respuesta == '':
+                            break
+                        else: # Le mostramos el mensaje de error
+                            console.input(Panel(f"[red]❌Introduce una opcion valida por favor [{lista_opciones}][/]",
+                                                            title="Error",
+                                                            border_style="red",
+                                                            width=60))
+                            system('cls')
+                            continue
                         
                     # Comparamos la respuesta si es intro es sin contestar
                     if respuesta == '':
@@ -201,13 +251,17 @@ def main():
 
                 system('cls')
                 # Mostramos cuantas pregutas a tenido bien mal y sin contestar
-                console.print(f'[#f7ff03]El alumno {alumno["Nombre"]} a tenido[/]\n[#3cff03]Preguntas buenas: {preguntas_buenas}[/]\n[#ff0303]Preguntas malas: {preguntas_malas}[/]\n[#0316ff]Preguntas sin contestar: {sin_contestar}[/]\nNota final: {nota_final}')
+                console.print(f'[#f7ff03]El alumno {alumno["Nombre"]} a tenido[/]\n[#3cff03]Preguntas buenas: {preguntas_buenas}[/]\n[#ff0303]Preguntas malas: {preguntas_malas}[/]\n[#0316ff]Preguntas sin contestar: {sin_contestar}[/]\n')
+                if nota_final >= 5:
+                    console.print(f'La nota final es de [#27ff58]{nota_final}[/]')
+                else:
+                    console.print(f'La nota final es de [#fc0000]{nota_final}[/]')
 
                 # Guardamos la nota final en  el alumno y una clave nota    
                 alumno["nota"] = nota_final
                 prompt()
                 system('cls')
-            #prompt()
+            
             
 
             
@@ -221,15 +275,15 @@ def main():
                             title="[blink]📋 Lista de alumnos[/]",
                             header_style="bold bright_cyan",
                             border_style="bright_yellow",
-                            
                         )
                 tabla.add_column('Nombre')
                 tabla.add_column('Nota')
                 try:
                     for alumno in clase[nombre_clase]['alumnos']:
                          tabla.add_row(
-                             str(alumno['Nombre']), 
-                             str(alumno['nota']))
+                             str(alumno['Nombre']),
+                             #Hacemos la condicion para que salga de color verde si es mas de 5 o rojo si es menos 
+                             f"[#fc0000]❌ {alumno['nota']}[/]" if alumno['nota'] <= 5 else f"[#27ff58]✅ {alumno['nota']}[/]")
                           
                         #print(f'{alumno['Nombre']} {alumno['nota']}')
                     console.print(tabla)
