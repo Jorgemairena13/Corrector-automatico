@@ -22,10 +22,12 @@ menu_contenido = """
 [#f89208]  2.📝 Corregir examen [/]
 
 
-[#f8f408]  3.🎓 Ver utlimos examenes [/]
+[#3155fa]  3.🎓 Ver utlimos examenes [/]
 
 
-[magenta]  4.🚪 Salir [/]
+[#f8f408]  4. ⚡Correcion rapida [/]
+
+[magenta]  5.🚪 Salir [/]
 
 [bold red]     
 Elige una opcion:  
@@ -257,7 +259,9 @@ def main():
                 else:
                     console.print(f'La nota final es de [#fc0000]{nota_final}[/]')
 
-                # Guardamos la nota final en  el alumno y una clave nota    
+                # Guardamos la nota final en  el alumno y una clave nota  
+
+
                 alumno["nota"] = nota_final
                 prompt()
                 system('cls')
@@ -299,7 +303,114 @@ def main():
                     system('cls')
                     break
             
+
         elif opcion == 4:
+            while True:
+                try: # Preguntamos por el numero de preguntas
+                    num_preguntas = int(prompt('Cuantas preguntas tiene el examen?\n',style=style))
+                    if num_preguntas == 0:
+                        console.input(Panel("[red]❌ El examen no puede tener 0 preguntas[/]",
+                                                            title="Error",
+                                                            border_style="red",
+                                                            width=40))
+                        system('cls')
+                        continue
+
+                    
+                    break
+                except: # Si nos da error le mostramos ese mensaje y le volvemos a preguntar
+                    console.input(Panel("[red]❌Introduce un numero por favor[/]",
+                                                            title="Error",
+                                                            border_style="red",
+                                                            width=40))
+                    system('cls')
+                    continue
+
+            pregunta_correcta = 10 / num_preguntas
+            pregunta_incorrecta =  round(pregunta_correcta / 3,2)
+
+            contador = 0
+            preguntas_buenas = 0
+            preguntas_malas = 0
+            sin_contestar = 0
+            nota_final = 0
+
+            lis_pregu_corre = []
+            lista_opciones = ['A','B','C','D']
+
+            for _ in range(num_preguntas):
+                system('cls')
+
+                while True:
+                    # Pedimos la respuesta correcta
+                    pregunta_corregida = prompt(f'Escribe la solucion de la pregunta {contador + 1} [A/B/C/D]',style=style).upper()
+                    if pregunta_corregida in lista_opciones:
+                        # Añadimos a la lista de preguntaas corregidas
+                        lis_pregu_corre.append(pregunta_corregida)
+                        break
+                    else:
+                        console.input(Panel("[red]❌La opcion solo puede ser [A/B/C/D] [/]",
+                                                            title="Error",
+                                                            border_style="red",
+                                                            width=40))
+                        system('cls')
+                        continue
+                
+            for _ in lis_pregu_corre :
+                # Bucle para validar la respuesta 
+                while True:
+                    # Le pedimos la respuesta del alumno
+                    respuesta = prompt(f'Escribe la respuesta a la pregunta {contador + 1}\nIntro para respuesta sin contestar',style=style).upper().strip()
+                    # Espacio para mejor vision
+                    print('')
+
+                    # Si esta en la lista de opciones o es intro
+                    if respuesta in lista_opciones or respuesta == '':
+                        break
+                    else: # Le mostramos el mensaje de error
+                        console.input(Panel(f"[red]❌Introduce una opcion valida por favor [{lista_opciones}][/]",
+                                                        title="Error",
+                                                        border_style="red",
+                                                        width=60))
+                        system('cls')
+                        continue
+                
+
+                # Comparamos la respuesta si es intro es sin contestar
+                if respuesta == '':
+                    # Le sumamos uno a las sin contestar
+                    sin_contestar += 1
+                    
+                # Comparamos que la respuesta sea igual que la de la lista que vamos rbuscando con el contador
+                elif respuesta == lis_pregu_corre[contador]:
+                    preguntas_buenas += 1# Le sumamos 1 a las buenas
+                    
+                # Si no es ninguna de las opciones la damos por mala
+                else:
+                    preguntas_malas += 1 # Le sumamos 1  a las malas
+                contador += 1
+            
+            #Hacemos los calculos de las buenas con lo que vale cada preguta buena
+            final_pregu_buenas = preguntas_buenas * pregunta_correcta
+
+            #Hacemos los calculos de las malas con lo que vale cada preguta mala
+            final_pregu_malas = preguntas_malas * pregunta_incorrecta
+
+            # Calculamos la nota final restando las malas a las buenas
+            nota_final = final_pregu_buenas - final_pregu_malas
+
+            # La redondeamos para no tener tantos decimales
+            nota_final = round(nota_final,2)
+
+            system('cls')
+            # Mostramos cuantas pregutas a tenido bien mal y sin contestar
+            console.print(f'[#f7ff03]El alumno a tenido[/]\n[#3cff03]Preguntas buenas: {preguntas_buenas}[/]\n[#ff0303]Preguntas malas: {preguntas_malas}[/]\n[#0316ff]Preguntas sin contestar: {sin_contestar}[/]\n')
+            if nota_final > 5:
+                console.print(f'La nota final es de [#27ff58]{nota_final}[/]')
+            else:
+                console.print(f'La nota final es de [#fc0000]{nota_final}[/]')
+            prompt()
+        elif opcion == 5:
             prompt("Muchas gracias por usar el programa",style=style)
             break
         
