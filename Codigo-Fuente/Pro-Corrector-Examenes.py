@@ -213,6 +213,7 @@ def main():
                         respuesta = prompt(f'Escribe la respuesta a la pregunta {contador + 1}\nIntro para respuesta sin contestar',style=style).upper()
                         # Espacio para mejor vision
                         print('')
+                        
 
                         # Si esta en la lista de opciones o es intro
                         if respuesta in lista_opciones or respuesta == '':
@@ -266,8 +267,6 @@ def main():
                 prompt()
                 system('cls')
             
-            
-
             
         # Opcion para ver los ultimos examenes corregidos
         elif opcion == 3:
@@ -344,6 +343,7 @@ def main():
                 while True:
                     # Pedimos la respuesta correcta
                     pregunta_corregida = prompt(f'Escribe la solucion de la pregunta {contador + 1} [A/B/C/D]',style=style).upper()
+                    contador += 1
                     if pregunta_corregida in lista_opciones:
                         # Añadimos a la lista de preguntaas corregidas
                         lis_pregu_corre.append(pregunta_corregida)
@@ -355,12 +355,14 @@ def main():
                                                             width=40))
                         system('cls')
                         continue
-                
+            contador = 0 
             for _ in lis_pregu_corre :
+            
                 # Bucle para validar la respuesta 
                 while True:
                     # Le pedimos la respuesta del alumno
                     respuesta = prompt(f'Escribe la respuesta a la pregunta {contador + 1}\nIntro para respuesta sin contestar',style=style).upper().strip()
+                    
                     # Espacio para mejor vision
                     print('')
 
@@ -374,6 +376,7 @@ def main():
                                                         width=60))
                         system('cls')
                         continue
+                
                 
 
                 # Comparamos la respuesta si es intro es sin contestar
