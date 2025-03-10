@@ -6,9 +6,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
 from os import system
 from rich.table import Table
-from rich.columns import Columns
-from rich.progress import Progress, BarColumn, TextColumn, SpinnerColumn
-from rich.live import Live
+
 
 import time
 
@@ -184,7 +182,9 @@ def main():
             while True:
                 try:
                     nombre_clase = prompt('Nombre clase: ',style=style)
-                    break
+                    if nombre_clase in clase:
+                        system("cls")
+                        break
                 except:
                     console.print(Panel("[red]❌La clase no existe[/]",
                                                                 title="Error",
